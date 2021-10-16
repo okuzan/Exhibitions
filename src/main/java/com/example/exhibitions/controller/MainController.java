@@ -16,9 +16,22 @@ public class MainController {
         return "login";
     }
 
+    @GetMapping("/change")
+    public String change(Model model) {
+        return "change";
+    }
+    @GetMapping(path="/check")
+    public String check(Model model) {
+        return "check";
+    }
+
     @GetMapping("/")
     public String homepage(Model model){
-        return "welcome";
+        return "index";
+    }
+    @GetMapping("/boot")
+    public String boot(Model model){
+        return "boot";
     }
     @GetMapping("/api/shows/{id}/edit")
     public String edit(Model model, @PathVariable String id) {
