@@ -31,6 +31,7 @@
             </div>
 
             <h1 th:text="#{registration.title}"></h1>
+            <!--/*@thymesVar id="user" type="com.example.exhibitions.data.UserDTO"*/-->
             <form th:action="@{/register}" th:object="${user}" method="post">
 
                 <p class="error-message"
