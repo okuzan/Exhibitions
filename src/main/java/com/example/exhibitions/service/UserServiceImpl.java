@@ -1,23 +1,28 @@
 package com.example.exhibitions.service;
 
 import com.example.exhibitions.data.UserDTO;
+import com.example.exhibitions.entity.Hall;
 import com.example.exhibitions.entity.Role;
 import com.example.exhibitions.entity.User;
+import com.example.exhibitions.paging.Paged;
+import com.example.exhibitions.paging.Paging;
+import com.example.exhibitions.repository.HallRepository;
 import com.example.exhibitions.repository.RoleRepository;
 import com.example.exhibitions.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
+
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
+import javax.swing.text.html.Option;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,7 +35,17 @@ public class UserServiceImpl implements UserService {
     private RoleRepository roleRepository;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private HallRepository hallRepo;
+
+
+    public Paged<User> getPage(int pageNumber, int size) {
+        PageRequest request = PageRequest.of(pageNumber - 1, size, Sort.by(Sort.Direction.ASC, "id"));
+        Page<User> postPage = userRepository.findAll(request);
+        return new Paged<>(postPage, Paging.of(postPage.getTotalPages(), pageNumber, size));
+    }
 
     public Page<User> findPaginated(Pageable pageable) {
         int pageSize = pageable.getPageSize();
@@ -75,6 +90,7 @@ public class UserServiceImpl implements UserService {
         User customerModel = mapDataToUser(dto);
         return userRepository.save(customerModel);
     }
+
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {

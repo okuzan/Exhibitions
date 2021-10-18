@@ -27,7 +27,7 @@ public class RegistrationController {
 
     @GetMapping
     public String getRegistrationView() {
-        return "registration";
+        return "views/unauthorized/registration";
     }
 
     @PostMapping
@@ -39,6 +39,6 @@ public class RegistrationController {
         if (result.hasErrors()) return "registration";
 
         userService.save(userDto);
-        return "registration_confirmation";
+        return "views/unauthorized/registration_confirmation";
     }
 }

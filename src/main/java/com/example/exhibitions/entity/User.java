@@ -48,4 +48,8 @@ public class User {
         this.password = password;
         this.roles = roles;
     }
+
+    public void changeStatus() {
+        this.setEnabled(!this.enabled);
+    }
 }
