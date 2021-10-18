@@ -22,11 +22,11 @@ public class ExhibitionDTO {
     private String title;
     @NotNull
     private Double price;
-    @NotBlank
+//    @NotBlank
     private String startDateTime;
-    @NotBlank
+//    @NotBlank
     private String endDateTime;
-    @NotEmpty
+//    @NotEmpty
     private List<String> halls;
     private final static String FORMAT = "EEE MMM d yyyy HH:mm:ss z";
 

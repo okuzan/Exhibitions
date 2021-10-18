@@ -59,6 +59,12 @@ public class MainController {
         return "views/authorized/admin/add_item";
     }
 
+    @GetMapping("/api/halls/add")
+    public String hall(Model model) {
+        model.addAttribute("hall", new HallDTO());
+        return "views/unauthorized/registration2";
+    }
+
     @PostMapping("api/halls/add")
     public String customerRegi3stration(@ModelAttribute("hall") @Valid HallDTO data, BindingResult result) {
 
@@ -71,7 +77,7 @@ public class MainController {
         return "views/unauthorized/registration_confirmation";
     }
     @PostMapping("show/add")
-    public String customerRegi3stratio3n(@ModelAttribute("exhibtion") @Valid ExhibitionDTO data, BindingResult result) {
+    public String customerRegi3stratio3n(@ModelAttribute("exhibition") @Valid ExhibitionDTO data, BindingResult result) {
 
         if (result.hasErrors()) {
             System.out.println("binding errors!");
@@ -81,16 +87,17 @@ public class MainController {
 //        userService.save(data);
         return "views/unauthorized/registration_confirmation";
     }
+    @GetMapping("/show/add")
+    public String hallmy(Model model) {
+        model.addAttribute("exhibition", new ExhibitionDTO());
+        return "views/unauthorized/registration2";
+    }
+
+
 
     @GetMapping("/api/shows/{id}")
     public String show(Model model, @PathVariable String id) {
         return "show";
-    }
-
-    @GetMapping("/api/halls/add")
-    public String hall(Model model) {
-        model.addAttribute("hall", new HallDTO());
-        return "views/unauthorized/registration2";
     }
 
     @GetMapping("/api/shows/{id}/buy")

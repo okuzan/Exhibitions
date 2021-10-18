@@ -41,8 +41,8 @@
                 </div>
 
                 <h1> Hall </h1>
-                <!--/*@thymesVar id="hall" type="com.example.exhibitions.data.HallDTO"*/-->
-                <form th:action="@{/api/halls/add}" th:object="${hall}" method="post">
+                <!--/*@thymesVar id="hall" type="com.example.exhibitions.data.ExhibitionDTO"*/-->
+                <form th:action="@{/show/add}" th:object="${exhibition}" method="post">
 
                     <p class="error-message"
                        th:if="${#fields.hasGlobalErrors()}"
@@ -50,15 +50,32 @@
                        th:text="${error}">Validation error</p>
 
                     <div class="form-group"
-                         th:classappend="${#fields.hasErrors('number')}? 'has-error':''">
-                        <label for="number" class="control-label">Number</label>
-                        <input id="number"
+                         th:classappend="${#fields.hasErrors('price')}? 'has-error':''">
+                        <label for="price" class="control-label">Price</label>
+                        <input id="price"
                                class="form-control"
-                               th:field="*{number}"/>
+                               th:field="*{price}"/>
                         <p class="error-message"
-                           th:each="error: ${#fields.errors('number')}"
+                           th:each="error: ${#fields.errors('price')}"
                            th:text="${error}">Validation error</p>
                     </div>
+                    <div class="form-group"
+                         th:classappend="${#fields.hasErrors('title')}? 'has-error':''">
+
+                        <label for="title" th:text="#{show.title}"></label>:
+                        <input type="text"
+                               id="title"
+                               name="title"
+                               th:field="*{title}"
+                               class="form-control"
+                               autofocus="autofocus"
+                        />
+                        <p class="error-message"
+                           th:each="error: ${#fields.errors('title')}"
+                           th:text="${error}">Validation error</p>
+
+                    </div>
+
                     <div class="form-group">
                         <button type="submit" class="btn btn-success" th:text="#{registration.button.register}">Register
                         </button>
