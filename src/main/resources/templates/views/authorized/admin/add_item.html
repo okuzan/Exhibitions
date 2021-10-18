@@ -25,14 +25,22 @@
 
             <div th:if="${param.success}">
                 <div class="alert alert-info">
-                    You've successfully registered!
+                    You've successfully added!
                 </div>
             </div>
-
+            <!--/*@thymesVar id="error" type="java.lang.Error"*/-->
             <h1 th:text="#{exhibition}"></h1>
-            <!--/*@thymesVar id="exhibition_data" type="com.example.exhibitions.data.ExhibitionDTO"*/-->
-            <form th:action="@{/api/shows/add}" th:object="${exhibition_data}" method="post">
-                <div class="form-group">
+            <!--/*@thymesVar id="exhibition" type="com.example.exhibitions.data.ExhibitionDTO"*/-->
+            <form th:action="@{/api/shows/add}" th:object="${exhibition}" method="post">
+
+                <p class="error-message"
+                   th:if="${#fields.hasGlobalErrors()}"
+                   th:each="error : ${#fields.errors('global')}"
+                   th:text="${error}">Validation error</p>
+
+                <div class="form-group"
+                     th:classappend="${#fields.hasErrors('title')}? 'has-error':''">
+
                     <label for="title" th:text="#{show.title}"></label>:
                     <input type="text"
                            id="title"
@@ -41,9 +49,15 @@
                            class="form-control"
                            autofocus="autofocus"
                     />
+                    <p class="error-message"
+                       th:each="error: ${#fields.errors('title')}"
+                       th:text="${error}">Validation error</p>
+
                 </div>
-                <div class="form-group">
-                    <label for="price" th:text="#{show.price}"></label>:
+                <div class="form-group"
+                     th:classappend="${#fields.hasErrors('price')}? 'has-error':''">
+
+                <label for="price" th:text="#{show.price}"></label>:
                     <input type="text"
                            id="price"
                            name="price"
@@ -51,9 +65,15 @@
                            class="form-control"
                            th:placeholder="#{currency}"
                     />
+                    <p class="error-message"
+                       th:each="error: ${#fields.errors('price')}"
+                       th:text="${error}">Validation error</p>
+
                 </div>
-                <div class="form-group">
-                    <label for="datetimes" th:text="#{show.frame}"></label>:
+                <div class="form-group"
+                     th:classappend="${#fields.hasErrors('startDateTime')}? 'has-error':''">
+
+                <label for="datetimes" th:text="#{show.frame}"></label>:
                     <input id="datetimes"
                            name="datetimes"
                            class="form-control"
@@ -65,11 +85,20 @@
                     <input id="enddatetime"
                            th:field="*{endDateTime}"
                            class="form-control" hidden>
+                    <p class="error-message"
+                       th:each="error: ${#fields.errors('startDateTime')}"
+                       th:text="${error}">Validation error</p>
+                    <p class="error-message"
+                       th:each="error: ${#fields.errors('endDateTime')}"
+                       th:text="${error}">Validation error</p>
+
 
                     <!--                           th:field="*{period}"-->
                 </div>
-                <div class="form-group">
-                    <label for="halls" th:text="#{show.halls}"></label>
+                <div class="form-group"
+                     th:classappend="${#fields.hasErrors('halls')}? 'has-error':''">
+
+                <label for="halls" th:text="#{show.halls}"></label>
                     <select id="halls" th:field="*{halls} " class="form-control" size="5"
                             name="halls[]"
                             multiple>
@@ -79,22 +108,30 @@
                                 th:value="${{hall.number}}"
                                 th:utext="${hall.number}">
                     </select>
-                </div>
-                </br>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-6 col-sm-offset-3">
-                            <input type="submit"
-                                   name="add-submit"
-                                   id="add-submit"
-                                   class="form-control btn btn-info"
-                                   th:value="#{show.add}"/>
-                            <!--                                   value="f"-->
+                    <p class="error-message"
+                       th:each="error: ${#fields.errors('halls')}"
+                       th:text="${error}">Validation error</p>
 
-                        </div>
-                    </div>
                 </div>
-                <div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success" th:text="#{show.add}">
+                    </button>
+                </div>
+
+<!--                <div class="form-group">-->
+<!--                    <div class="row">-->
+<!--                        <div class="col-sm-6 col-sm-offset-3">-->
+<!--                            <input type="submit"-->
+<!--                                   name="add-submit"-->
+<!--                                   id="add-submit"-->
+<!--                                   class="form-control btn btn-info"-->
+<!--                                   th:value="#{show.add}"/>-->
+<!--                            &lt;!&ndash;                                   value="f"&ndash;&gt;-->
+
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div>-->
                     <!--                    <input id="startdate"-->
                     <!--                           hidden-->
                     <!--                           th:field="*{startDateTime}"-->
@@ -104,7 +141,7 @@
                     <!--                           th:field="*{endDateTime}"-->
                     <!--                    />-->
 
-                </div>
+<!--                </div>-->
                 <!--                <div class="form-group">-->
                 <!--                    <br>-->
                 <!--                    <button type="submit" class="btn btn-default" name="btn-save" id="btn-submit">-->

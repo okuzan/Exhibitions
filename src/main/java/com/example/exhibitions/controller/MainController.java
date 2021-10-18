@@ -1,16 +1,17 @@
 package com.example.exhibitions.controller;
 
 import com.example.exhibitions.data.ExhibitionDTO;
+import com.example.exhibitions.data.HallDTO;
 import com.example.exhibitions.repository.HallRepository;
 import com.example.exhibitions.repository.UserRepository;
 import com.example.exhibitions.service.UserServiceImpl;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.charset.StandardCharsets;
+import javax.validation.Valid;
 
 @Controller
 public class MainController {
@@ -22,6 +23,12 @@ public class MainController {
 
     @Autowired
     private UserServiceImpl userService;
+
+    @ModelAttribute("exhibition")
+    public ExhibitionDTO userRegistrationDto() {
+        return new ExhibitionDTO();
+    }
+
 
     @GetMapping("/welcome")
     public String welcome() {
@@ -48,13 +55,42 @@ public class MainController {
     @GetMapping("/api/shows/add")
     public String add(Model model) {
         model.addAttribute("halls", hallRepo.findAll());
-        model.addAttribute("exhibition_data", new ExhibitionDTO());
+//        model.addAttribute("exhibition", new ExhibitionDTO());
         return "views/authorized/admin/add_item";
+    }
+
+    @PostMapping("api/halls/add")
+    public String customerRegi3stration(@ModelAttribute("hall") @Valid HallDTO data, BindingResult result) {
+
+        if (result.hasErrors()) {
+            System.out.println("binding errors!");
+            return "views/unauthorized/registration2";
+        }
+        System.out.println("gone thru");
+//        userService.save(data);
+        return "views/unauthorized/registration_confirmation";
+    }
+    @PostMapping("show/add")
+    public String customerRegi3stratio3n(@ModelAttribute("exhibtion") @Valid ExhibitionDTO data, BindingResult result) {
+
+        if (result.hasErrors()) {
+            System.out.println("binding errors!");
+            return "views/unauthorized/registration2";
+        }
+        System.out.println("gone thru");
+//        userService.save(data);
+        return "views/unauthorized/registration_confirmation";
     }
 
     @GetMapping("/api/shows/{id}")
     public String show(Model model, @PathVariable String id) {
         return "show";
+    }
+
+    @GetMapping("/api/halls/add")
+    public String hall(Model model) {
+        model.addAttribute("hall", new HallDTO());
+        return "views/unauthorized/registration2";
     }
 
     @GetMapping("/api/shows/{id}/buy")

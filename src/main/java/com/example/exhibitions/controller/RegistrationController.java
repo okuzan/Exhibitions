@@ -1,5 +1,6 @@
 package com.example.exhibitions.controller;
 
+import com.example.exhibitions.data.HallDTO;
 import com.example.exhibitions.data.UserDTO;
 import com.example.exhibitions.entity.User;
 import com.example.exhibitions.service.UserService;
@@ -36,8 +37,10 @@ public class RegistrationController {
         if (existing != null)
             result.rejectValue("email", null, "There is already an account registered with that email");
 
-        if (result.hasErrors()) return "registration";
-
+        if (result.hasErrors()) {
+            System.out.println("binding errors!");
+            return "views/unauthorized/registration";
+        }
         userService.save(userDto);
         return "views/unauthorized/registration_confirmation";
     }

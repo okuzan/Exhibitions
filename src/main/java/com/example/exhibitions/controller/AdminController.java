@@ -1,24 +1,24 @@
 package com.example.exhibitions.controller;
 
 import com.example.exhibitions.data.ExhibitionDTO;
-import com.example.exhibitions.entity.Exhibition;
-import com.example.exhibitions.entity.User;
-import com.example.exhibitions.repository.ExhibitionRepository;
+import com.example.exhibitions.repository.HallRepository;
 import com.example.exhibitions.repository.UserRepository;
 import com.example.exhibitions.service.ExhibitionServiceImpl;
-import com.example.exhibitions.service.UserService;
-import com.example.exhibitions.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
 public class AdminController {
     @Autowired
     UserRepository userRepository;
-//    @Autowired
-//    ExhibitionRepository exhibitionRepository;
+    @Autowired
+    HallRepository hallRepository;
     @Autowired
     ExhibitionServiceImpl exhibitionService;
     @PostMapping("/users/enabled/{id}")
@@ -27,9 +27,16 @@ public class AdminController {
         return "Success";
     }
     @PostMapping("/shows/add")
-    public String addShow(@ModelAttribute ExhibitionDTO exhibition_data) {
-        System.out.println(exhibition_data);
-        exhibitionService.save(exhibition_data);
+    public String addShow(@Valid ExhibitionDTO data, Model model, BindingResult result) {
+        System.out.println("HERE!!!!!!!!!!!!!");
+        if (result.hasErrors()) {
+            System.out.println("Binding errors");
+            model.addAttribute("exhibition_data", new ExhibitionDTO());
+            model.addAttribute("halls", hallRepository.findAll());
+            return "views/authorized/admin/add_item";
+        }
+        exhibitionService.save(data);
+
         return "Success";
     }
 }
