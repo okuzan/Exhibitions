@@ -10,16 +10,16 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class AdminController {
 
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    HallRepository hallRepository;
-    @Autowired
-    ExhibitionServiceImpl exhibitionService;
-
-    @PostMapping("/users/enabled/{id}")
-    public String changeUserStatus(@RequestParam Boolean checked, @PathVariable String id) {
-        userRepository.changeEnabledStatus(checked, Long.valueOf(id));
-        return "Success";
-    }
+//    @Autowired
+//    UserRepository userRepository;
+//    @Autowired
+//    HallRepository hallRepository;
+//    @Autowired
+//    ExhibitionServiceImpl exhibitionService;
+//
+//    @PostMapping("/users/enabled/{id}")
+//    public String changeUserStatus(@RequestParam Boolean checked, @PathVariable String id) {
+//        userRepository.changeEnabledStatus(checked, Long.valueOf(id));
+//        return "Success";
+//    }
 }

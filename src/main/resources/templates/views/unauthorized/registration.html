@@ -4,40 +4,22 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link rel="stylesheet"
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <!--    <link rel="stylesheet" type="text/css"-->
-    <!--          th:href="@{/css/display_form.css}" />-->
-
-    <!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"-->
-    <!--          rel="stylesheet"-->
-    <!--          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"-->
-    <!--          crossorigin="anonymous">-->
-
-    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
-    <style>
-        label, input {
-            display: block;
-        }
-
-        label {
-            margin-bottom: 100px;
-        }
-
-    </style>
+    <th:block th:include="fragments/js/head.html :: bootstrap"></th:block>
+    <th:block th:include="fragments/js/main.html :: script"></th:block>
     <title>Registration</title>
 </head>
 <body>
+<div th:include="fragments/headers/general :: header">...</div>
 <neone id="neone">
     <div class="container">
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
 
                 <div th:if="${param.success}">
-                    <div class="alert alert-info">
-                        You've successfully registered!
-                    </div>
+                    <div class="alert alert-info" th:text="#{registration.success}"></div>
+                </div>
+                <div th:if="${param.error}">
+                    <div class="alert alert-danger" th:text="#{registration.failure}"></div>
                 </div>
 
                 <h1 th:text="#{registration.title}"></h1>
@@ -79,16 +61,6 @@
                            th:each="error : ${#fields.errors('email')}"
                            th:text="${error}">Validation error</p>
                     </div>
-                    <!--                <div class="form-group"-->
-                    <!--                     th:classappend="${#fields.hasErrors('confirmEmail')}? 'has-error':''">-->
-                    <!--                    <label for="confirmEmail" class="control-label">Confirm e-mail</label>-->
-                    <!--                    <input id="confirmEmail"-->
-                    <!--                           class="form-control"-->
-                    <!--                           th:field="*{confirmEmail}"/>-->
-                    <!--                    <p class="error-message"-->
-                    <!--                       th:each="error : ${#fields.errors('confirmEmail')}"-->
-                    <!--                       th:text="${error}">Validation error</p>-->
-                    <!--                </div>-->
                     <div class="form-group"
                          th:classappend="${#fields.hasErrors('password')}? 'has-error':''">
                         <label for="password" class="control-label" th:text="#{registration.password}"></label>
@@ -128,36 +100,13 @@
                     <div class="form-group">
                         <button type="submit" class="btn btn-success" th:text="#{registration.button}">Register
                         </button>
-                        <span th:text="#{registration.already}"> <a href="/" th:href="@{/login}"
-                                                                    th:text="#{registration.button.login}"></a></span>
+                        <span th:text="#{registration.already}"> </span>
+                        <a th:href="login" th:text="#{registration.button.login}"></a>
                     </div>
-
                 </form>
-                <!--            <span th:text="#{change_language}"></span>:-->
-                <select id="locales">
-                    <option selected disabled hidden th:text="#{change_language}"></option>
-                    <option value="en" th:text="#{lang.en}"></option>
-                    <option value="uk" th:text="#{lang.uk}"></option>
-                </select>
             </div>
         </div>
     </div>
 </neone>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
-</script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#locales").change(function () {
-            let selectedOption = $('#locales').val();
-            if (selectedOption !== '') {
-                window.location.replace('register?lang=' + selectedOption);
-            }
-        });
-    });
-</script>
-
-<script type="text/javascript" th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>
-<script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
-
 </body>
 </html>

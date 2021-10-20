@@ -4,31 +4,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <style>
-        .error-message {
-            color: red;
-        }
-    </style>
+    <th:block th:include="fragments/js/head.html :: bootstrap"></th:block>
+    <th:block th:include="fragments/js/main.html :: script"></th:block>
     <title>bootstrap</title>
 </head>
 <body>
 <div th:include="fragments/headers/general :: header">...</div>
-<div th:replace="fragments/js/main :: script">...</div>
 <div class="container">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
 
             <div th:if="${param.success}">
-                <div class="alert alert-info" th:text="#{show.success}">
-                    You've successfully added new exhibition!
-                </div>
+                <div class="alert alert-info" th:text="#{show.success}"></div>
             </div>
             <div th:if="${param.error}">
-                <div class="alert alert-danger" th:text="#{show.fail}">
-
-                </div>
+                <div class="alert alert-danger" th:text="#{show.fail}"></div>
             </div>
 
             <!--/*@thymesVar id="error" type="java.lang.Error"*/-->
@@ -94,9 +84,6 @@
                     <p class="error-message"
                        th:each="error: ${#fields.errors('endDateTime')}"
                        th:text="${error}">Validation error</p>
-
-
-                    <!--                           th:field="*{period}"-->
                 </div>
                 <div class="form-group"
                      th:classappend="${#fields.hasErrors('halls')}? 'has-error':''">
@@ -127,25 +114,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
 <link rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
-<script>
-    $(document).ready(function () {
-        // alert("cringe")
-        const btn = $('#add-submit');
-        btn.on('click', function () {
-            const mySelect = $('#box');
-            console.log(mySelect.val());
-        });
-
-    });
-</script>
-<!--<th:block layout:fragment="script"/>-->
 <script>
     $(function () {
         $('input[name="datetimes"]').daterangepicker({
@@ -161,6 +133,5 @@
         })
     })
 </script>
-
 </body>
 </html>

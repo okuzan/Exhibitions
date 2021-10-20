@@ -6,11 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
+    <th:block th:include="fragments/js/head.html :: bootstrap"></th:block>
+    <th:block th:include="fragments/js/main.html :: script"></th:block>
     <title>Login</title>
 </head>
 <body>
+<div th:include="fragments/headers/general :: header">...</div>
 <div class="container">
-
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <h1 th:text="#{login.title}"></h1>
@@ -54,8 +56,6 @@
                                    id="login-submit"
                                    class="form-control btn btn-info"
                                    th:value="#{login.button}"/>
-<!--                                   value="f"-->
-
                         </div>
                     </div>
                 </div>
@@ -64,35 +64,11 @@
                         <span th:text="#{login.new_user}"></span>
                         <a th:text="#{login.register}" th:href="register"></a>
                     </label>
-
-<!--                    <span th:text="#{login.new_user}"> <a th:href="@{/registration}" th:text="#{login.register}"></a></span>-->
                 </div>
             </form>
-            <select id="locales">
-                <option selected disabled hidden th:text="#{change_language}"></option>
-                <option value="en" th:text="#{lang.en}"></option>
-                <option value="uk" th:text="#{lang.uk}"></option>
-            </select>
-
         </div>
     </div>
-
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
-</script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#locales").change(function () {
-            let selectedOption = $('#locales').val();
-            if (selectedOption !== '') {
-                window.location.replace('login?lang=' + selectedOption);
-            }
-        });
-    });
-</script>
-<script type="text/javascript" th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>
-<script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
-
 </body>
 </html>
 

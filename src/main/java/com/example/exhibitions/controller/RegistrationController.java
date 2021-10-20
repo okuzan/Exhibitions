@@ -1,6 +1,5 @@
 package com.example.exhibitions.controller;
 
-import com.example.exhibitions.data.HallDTO;
 import com.example.exhibitions.data.UserDTO;
 import com.example.exhibitions.entity.User;
 import com.example.exhibitions.service.UserService;
@@ -32,16 +31,16 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public String customerRegistration(@ModelAttribute("user") @Valid UserDTO userDto, BindingResult result) {
+    public String userRegistration(@ModelAttribute("user") @Valid UserDTO userDto, BindingResult result) {
         User existing = userService.findByEmail(userDto.getEmail());
         if (existing != null)
             result.rejectValue("email", null, "There is already an account registered with that email");
 
         if (result.hasErrors()) {
             System.out.println("binding errors!");
-            return "views/unauthorized/registration";
+            return "redirect:/register?error";
         }
         userService.save(userDto);
-        return "views/unauthorized/registration_confirmation";
+        return "redirect:/register?success";
     }
 }
