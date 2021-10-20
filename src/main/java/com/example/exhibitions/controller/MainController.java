@@ -2,16 +2,22 @@ package com.example.exhibitions.controller;
 
 import com.example.exhibitions.data.ExhibitionDTO;
 import com.example.exhibitions.data.HallDTO;
+import com.example.exhibitions.entity.Hall;
 import com.example.exhibitions.repository.HallRepository;
 import com.example.exhibitions.repository.UserRepository;
 import com.example.exhibitions.service.UserServiceImpl;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 public class MainController {
@@ -25,8 +31,13 @@ public class MainController {
     private UserServiceImpl userService;
 
     @ModelAttribute("exhibition")
-    public ExhibitionDTO userRegistrationDto() {
+    public ExhibitionDTO exhibitionDTO() {
         return new ExhibitionDTO();
+    }
+
+    @ModelAttribute("halls")
+    public List<Hall> halls() {
+        return hallRepo.findAll();
     }
 
 
@@ -54,45 +65,37 @@ public class MainController {
 
     @GetMapping("/api/shows/add")
     public String add(Model model) {
-        model.addAttribute("halls", hallRepo.findAll());
-//        model.addAttribute("exhibition", new ExhibitionDTO());
         return "views/authorized/admin/add_item";
     }
 
     @GetMapping("/api/halls/add")
     public String hall(Model model) {
-        model.addAttribute("hall", new HallDTO());
         return "views/unauthorized/registration2";
     }
 
     @PostMapping("api/halls/add")
     public String customerRegi3stration(@ModelAttribute("hall") @Valid HallDTO data, BindingResult result) {
-
         if (result.hasErrors()) {
-            System.out.println("binding errors!");
             return "views/unauthorized/registration2";
         }
-        System.out.println("gone thru");
 //        userService.save(data);
         return "views/unauthorized/registration_confirmation";
     }
+
+//    @SneakyThrows
     @PostMapping("show/add")
-    public String customerRegi3stratio3n(@ModelAttribute("exhibition") @Valid ExhibitionDTO data, BindingResult result) {
+    public String customerRegi3stratio3n(@ModelAttribute("exhibition") @Validated ExhibitionDTO data, BindingResult result, Model model) {
 
-        if (result.hasErrors()) {
-            System.out.println("binding errors!");
-            return "views/unauthorized/registration2";
-        }
-        System.out.println("gone thru");
+        if (result.hasErrors())
+            return "redirect:/show/add?error";
 //        userService.save(data);
-        return "views/unauthorized/registration_confirmation";
-    }
-    @GetMapping("/show/add")
-    public String hallmy(Model model) {
-        model.addAttribute("exhibition", new ExhibitionDTO());
-        return "views/unauthorized/registration2";
+        return "redirect:/show/add?success";
     }
 
+    @GetMapping("/show/add")
+    public String addShow(Model model) {
+        return "views/authorized/admin/add_item";
+    }
 
 
     @GetMapping("/api/shows/{id}")
@@ -105,7 +108,7 @@ public class MainController {
         return "buy";
     }
 
-//    @RequestMapping(path = "/testrequest", method = RequestMethod.POST)
+    //    @RequestMapping(path = "/testrequest", method = RequestMethod.POST)
 //    public String testGetRequest(@RequestBody String request)  {
 //        final byte[] requestContent;
 //        requestContent = IOUtils.toByteArray(request.getReader());
@@ -116,12 +119,17 @@ public class MainController {
 //    public void fjdksjf(Model model, @PathVariable String id){
 //        System.out.println(id);
 //    }
+//    @RequestMapping(value = "/redirect", method = RequestMethod.GET)
+//    public ModelAndView method() {
+//        return new ModelAndView("redirect:" + projectUrl);
+//    }
+
     @GetMapping(path = "/api/users")
     public String posts(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
                         @RequestParam(value = "size", required = false, defaultValue = "10") int size, Model model
-                        ) {
+    ) {
         model.addAttribute("posts", userService.getPage(pageNumber, size));
-        model.addAttribute("path","/api/users");
+        model.addAttribute("path", "/api/users");
         return "views/authorized/admin/users";
     }
 

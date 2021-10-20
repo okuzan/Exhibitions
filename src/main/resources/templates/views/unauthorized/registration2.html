@@ -1,112 +1,167 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link rel="stylesheet"
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <!--    <link rel="stylesheet" type="text/css"-->
-    <!--          th:href="@{/css/display_form.css}" />-->
-
-    <!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"-->
-    <!--          rel="stylesheet"-->
-    <!--          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"-->
-    <!--          crossorigin="anonymous">-->
-
-    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <style>
-        label, input {
-            display: block;
+        .error-message {
+            color: red;
         }
-
-        label {
-            margin-bottom: 100px;
-        }
-
     </style>
-    <title>Registration</title>
+    <title>bootstrap</title>
 </head>
 <body>
-<neone id="neone">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 col-md-offset-3">
+<div th:include="fragments/headers/auth :: headerFragment">...</div>
+<!--$('input[name="dates"]').daterangepicker();-->
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
 
-                <div th:if="${param.success}">
-                    <div class="alert alert-info">
-                        You've successfully registered!
-                    </div>
+            <div th:if="${param.success}">
+                <div class="alert alert-info" th:text="#{show.success}">
+                    You've successfully added new exhibition!
                 </div>
+            </div>
+            <div th:if="${param.error}">
+                <div class="alert alert-danger" th:text="#{show.fail}">
 
-                <h1> Hall </h1>
-                <!--/*@thymesVar id="hall" type="com.example.exhibitions.data.ExhibitionDTO"*/-->
-                <form th:action="@{/show/add}" th:object="${exhibition}" method="post">
+                </div>
+            </div>
 
+            <!--/*@thymesVar id="error" type="java.lang.Error"*/-->
+            <h1 th:text="#{exhibition}"></h1>
+            <!--/*@thymesVar id="exhibition" type="com.example.exhibitions.data.ExhibitionDTO"*/-->
+            <form th:action="@{/show/add}" th:object="${exhibition}" method="post">
+
+                <p class="error-message"
+                   th:if="${#fields.hasGlobalErrors()}"
+                   th:each="error : ${#fields.errors('global')}"
+                   th:text="${error}">Validation error</p>
+
+                <div class="form-group"
+                     th:classappend="${#fields.hasErrors('title')}? 'has-error':''">
+
+                    <label for="title" th:text="#{show.title}"></label>:
+                    <input type="text"
+                           id="title"
+                           name="title"
+                           th:field="*{title}"
+                           class="form-control"
+                           autofocus="autofocus"
+                    />
                     <p class="error-message"
-                       th:if="${#fields.hasGlobalErrors()}"
-                       th:each="error : ${#fields.errors('global')}"
+                       th:each="error: ${#fields.errors('title')}"
                        th:text="${error}">Validation error</p>
 
-                    <div class="form-group"
-                         th:classappend="${#fields.hasErrors('price')}? 'has-error':''">
-                        <label for="price" class="control-label">Price</label>
-                        <input id="price"
-                               class="form-control"
-                               th:field="*{price}"/>
-                        <p class="error-message"
-                           th:each="error: ${#fields.errors('price')}"
-                           th:text="${error}">Validation error</p>
-                    </div>
-                    <div class="form-group"
-                         th:classappend="${#fields.hasErrors('title')}? 'has-error':''">
+                </div>
+                <div class="form-group"
+                     th:classappend="${#fields.hasErrors('price')}? 'has-error':''">
 
-                        <label for="title" th:text="#{show.title}"></label>:
-                        <input type="text"
-                               id="title"
-                               name="title"
-                               th:field="*{title}"
-                               class="form-control"
-                               autofocus="autofocus"
-                        />
-                        <p class="error-message"
-                           th:each="error: ${#fields.errors('title')}"
-                           th:text="${error}">Validation error</p>
+                    <label for="price" th:text="#{show.price}"></label>:
+                    <input type="text"
+                           id="price"
+                           name="price"
+                           th:field="*{price}"
+                           class="form-control"
+                           th:placeholder="#{currency}"
+                    />
+                    <p class="error-message"
+                       th:each="error: ${#fields.errors('price')}"
+                       th:text="${error}">Validation error</p>
 
-                    </div>
+                </div>
+                <div class="form-group"
+                     th:classappend="${#fields.hasErrors('startDateTime')}? 'has-error':''">
 
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-success" th:text="#{registration.button.register}">Register
-                        </button>
-                    </div>
+                    <label for="datetimes" th:text="#{show.frame}"></label>:
+                    <input id="datetimes"
+                           name="datetimes"
+                           class="form-control"
+                    />
+                    <input id="startdatetime"
+                           name="price"
+                           th:field="*{startDateTime}"
+                           class="form-control" hidden>
+                    <input id="enddatetime"
+                           th:field="*{endDateTime}"
+                           class="form-control" hidden>
+                    <p class="error-message"
+                       th:each="error: ${#fields.errors('startDateTime')}"
+                       th:text="${error}">Validation error</p>
+                    <p class="error-message"
+                       th:each="error: ${#fields.errors('endDateTime')}"
+                       th:text="${error}">Validation error</p>
 
-                </form>
-                <!--            <span th:text="#{change_language}"></span>:-->
-                <select id="locales">
-                    <option selected disabled hidden th:text="#{change_language}"></option>
-                    <option value="en" th:text="#{lang.en}"></option>
-                    <option value="uk" th:text="#{lang.uk}"></option>
-                </select>
-            </div>
+
+                    <!--                           th:field="*{period}"-->
+                </div>
+                <div class="form-group"
+                     th:classappend="${#fields.hasErrors('halls')}? 'has-error':''">
+
+                    <label for="halls" th:text="#{show.halls}"></label>
+                    <select id="halls" th:field="*{halls} " class="form-control" size="5"
+                            name="halls[]"
+                            multiple>
+                        <option value="Argentina"> Argentina</option>
+                        <!--/*@thymesVar id="number" type="com.example.exhibitions.entity.Hall"*/-->
+                        <option th:each="hall : ${halls}"
+                                th:value="${{hall.number}}"
+                                th:utext="${hall.number}">
+                    </select>
+                    <p class="error-message"
+                       th:each="error: ${#fields.errors('halls')}"
+                       th:text="${error}">Validation error</p>
+
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success" th:text="#{show.add}">
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-</neone>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
-</script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#locales").change(function () {
-            let selectedOption = $('#locales').val();
-            if (selectedOption !== '') {
-                window.location.replace('register?lang=' + selectedOption);
-            }
-        });
-    });
-</script>
+</div>
 
-<script type="text/javascript" th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>
-<script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+<script >
+    $(document).ready(function() {
+
+        const btn = $('#add-submit');
+        btn.on('click', function() {
+            const mySelect = $('#box');
+            console.log(mySelect.val());
+        });
+
+    });
+
+</script>
+<script>
+    $(function () {
+        $('input[name="datetimes"]').daterangepicker({
+            timePicker: true,
+            startDate: moment().startOf('hour'),
+            endDate: moment().startOf('hour').add(32, 'hour'),
+            locale: {
+                format: 'DD.MM hh:mm'
+            }
+        }, function (start, end, label) {
+            document.getElementById("startdatetime").value = start.toLocaleString();
+            document.getElementById("enddatetime").value = end.toLocaleString();
+        })
+    })
+</script>
 
 </body>
 </html>

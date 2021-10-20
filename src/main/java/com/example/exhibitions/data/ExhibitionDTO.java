@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.ResourceBundle;
 
 @NoArgsConstructor
 @Getter
@@ -18,15 +19,15 @@ import java.util.List;
 @ToString
 public class ExhibitionDTO {
 
-    @NotBlank
+    @NotBlank(message = "{show.title.nonempty}")
     private String title;
-    @NotNull
+    @NotNull(message = "{show.price.nonempty}")
     private Double price;
-//    @NotBlank
+    @NotBlank(message = "{show.start.nonempty}")
     private String startDateTime;
-//    @NotBlank
+    @NotBlank(message = "{show.end.nonempty}")
     private String endDateTime;
-//    @NotEmpty
+    @NotEmpty(message = "{show.halls.nonempty}")
     private List<String> halls;
     private final static String FORMAT = "EEE MMM d yyyy HH:mm:ss z";
 
