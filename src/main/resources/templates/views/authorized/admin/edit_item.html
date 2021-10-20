@@ -11,18 +11,17 @@
             color: red;
         }
     </style>
-    <title>bootstrap</title>
+    <title>Edit show</title>
 </head>
 <body>
 <div th:include="fragments/headers/general :: header">...</div>
-<div th:replace="fragments/js/main :: script">...</div>
 <div class="container">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
 
             <div th:if="${param.success}">
                 <div class="alert alert-info" th:text="#{show.success}">
-                    You've successfully added new exhibition!
+                    You've successfully edited exhibition!
                 </div>
             </div>
             <div th:if="${param.error}">

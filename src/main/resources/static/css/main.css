@@ -85,11 +85,11 @@ input:checked + .slider:before {
     border-radius: 6px;
 }
 
-.nav > li > a:focus, .nav > li > a:hover {
-    text-decoration: none;
-    background-color: black;
-    color: white;
-}
+/*.nav > li > a:focus, .nav > li > a:hover {*/
+/*    text-decoration: none;*/
+/*    !*background-color: black;*!*/
+/*    !*color: white;*!*/
+/*}*/
 
 
 .table.table-bordered.vertical,
@@ -115,7 +115,7 @@ h1 {color: #090101;}
     text-transform: capitalize;
 }
 .navbar { background-color: #484848; }
-.navbar .navbar-nav .nav-link { color: #fff; }
+/*.navbar .navbar-nav .nav-link { color: #fff; }*/
 .navbar .navbar-nav .nav-link:hover { color: #fbc531; }
 .navbar .navbar-nav .active > .nav-link { color: #fbc531; }
 

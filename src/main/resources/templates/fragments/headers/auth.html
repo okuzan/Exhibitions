@@ -10,35 +10,43 @@
     <title>bootstrap</title>
 </head>
 <body>
-<div th:fragment="headerFragment">
+<div th:fragment="header">
     <header class="p-3 mb-3 border-bottom">
         <div class="container">
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                 <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
-                    <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
+                    <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+                        <use xlink:href="#bootstrap"/>
+                    </svg>
                 </a>
 
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                    <li><a href="#" class="nav-link px-2 link-secondary">Overview</a></li>
-                    <li><a href="#" class="nav-link px-2 link-dark">Inventory</a></li>
-                    <li><a href="users" class="nav-link px-2 link-dark">Users</a></li>
-                    <li><a href="#" class="nav-link px-2 link-dark">Products</a></li>
+                    <li><a href="/api/users" class="nav-link px-2 link-dark" th:text="#{menu.users}"></a></li>
+                    <li><a href="/api/shows" class="nav-link px-2 link-dark" th:text="#{menu.shows}"></a></li>
+                    <li><a href="/api/shows/add" class="nav-link px-2 link-dark" th:text="#{menu.add}"></a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false" th:text="#{menu.language}">
+                        </a>
+                        <ul class="dropdown-menu" id="locales" aria-labelledby="navbarDropdown">
+                            <li><a value="en" id="lang1" class="dropdown-item" th:text="#{lang.en}"></a></li>
+                            <li><a value="uk" id="lang2" class="dropdown-item" th:text="#{lang.uk}"></a></li>
+                            <!--                            <li><hr class="dropdown-divider"></li>-->
+                        </ul>
+                    </li>
                 </ul>
 
-                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-                    <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
-                </form>
-
                 <div class="dropdown text-end">
-                    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1"
+                       data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
                     </a>
                     <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
                         <li><a class="dropdown-item" href="#">New project...</a></li>
-                        <li><a class="dropdown-item" href="#">Settings</a></li>
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Sign out</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" onclick="logout_handler()" th:text="#{menu.profile.sign-out}"></a></li>
                     </ul>
                 </div>
             </div>
@@ -46,16 +54,54 @@
     </header>
 
 </div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+
 <!-- Optional JavaScript; choose one of the two! -->
 <!-- Option 1: Bootstrap Bundle with Popper -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+<th:block th:fragment="script">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
-<!-- Option 2: Separate Popper and Bootstrap JS -->
-<!--
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
--->
+    <script type="text/javascript">
+        function logout_handler() {
+            window.location.href= "/logout"
+        }
+
+        function URL_add_parameter(url, param, value) {
+            var hash = {};
+            var parser = document.createElement('a');
+            parser.href = url;
+            var parameters = parser.search.split(/\?|&/);
+            for (var i = 0; i < parameters.length; i++) {
+                if (!parameters[i])
+                    continue;
+                var ary = parameters[i].split('=');
+                hash[ary[0]] = ary[1];
+            }
+            hash[param] = value;
+            var list = [];
+            Object.keys(hash).forEach(function (key) {
+                list.push(key + '=' + hash[key]);
+            });
+            parser.search = '?' + list.join('&');
+            return parser.href;
+        }
+
+        $(document).ready(function () {
+            $(".dropdown-item ").click(function (e) {
+                // e.preventDefault()
+                let id = e.currentTarget.getAttribute("id");
+                if (id.startsWith("lang")) {
+                    let lang_code = e.currentTarget.getAttribute("value");
+                    window.location.href = URL_add_parameter(location.href, 'lang', lang_code);
+                }
+            });
+        });
+    </script>
+</th:block>
 </body>
 </html>
