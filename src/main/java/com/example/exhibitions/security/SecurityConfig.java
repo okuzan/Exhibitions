@@ -74,6 +74,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .hasRole("ADMIN")
                 .antMatchers("/api/users")
                 .hasRole("ADMIN")
+                .antMatchers("/api/shows/{id}/delete")
+                .hasRole("ADMIN")
                 .antMatchers("/api/shows/{id}/buy")
                 .hasRole("USER")
                 .antMatchers("/api/shows/{id}")
@@ -92,6 +94,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .clearAuthentication(true)
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/login?logout")
-                .permitAll();
+                .permitAll().and().exceptionHandling().accessDeniedPage("/denied")
+        ;
     }
 }

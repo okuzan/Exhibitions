@@ -19,8 +19,9 @@ import java.util.ResourceBundle;
 @ToString
 public class ExhibitionDTO {
 
+    private Long id;
     @NotBlank(message = "{show.title.nonempty}")
-    private String title;
+    private String name;
     @NotNull(message = "{show.price.nonempty}")
     private Double price;
     @NotBlank(message = "{show.start.nonempty}")

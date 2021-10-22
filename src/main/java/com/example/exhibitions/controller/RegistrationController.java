@@ -36,10 +36,8 @@ public class RegistrationController {
         if (existing != null)
             result.rejectValue("email", null, "There is already an account registered with that email");
 
-        if (result.hasErrors()) {
-            System.out.println("binding errors!");
-            return "redirect:/register?error";
-        }
+        if (result.hasErrors()) return "redirect:/register?error";
+
         userService.save(userDto);
         return "redirect:/register?success";
     }

@@ -27,7 +27,7 @@ public class Exhibition {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime startDate;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "exhibitions_halls",
             joinColumns = @JoinColumn(name = "id"),

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Insert title here</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" >
+</head>
+<body>
+<div class="container">
+    <h4>COULDN"T FIND BY ID</h4>
+    <table class="table table-bordered">
+        <tr>
+            <td>DATE</td>
+            <td th:text="${timestamp}"></td>
+        </tr>
+
+        <tr>
+            <td>STATUS</td>
+            <td th:text="${status}"></td>
+        </tr>
+
+        <tr>
+            <td>ERROR</td>
+            <td th:text="${error}"></td>
+        </tr>
+
+        <tr>
+            <td>PATH</td>
+            <td th:text="${path}"></td>
+        </tr>
+
+    </table>
+</div>
+</body>
+</html>
