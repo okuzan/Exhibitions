@@ -33,10 +33,16 @@ public class ExhibitionDTO {
     private final static String FORMAT = "EEE MMM d yyyy HH:mm:ss z";
 
 
-    public LocalDateTime parseDateTime(String input) {
+    public static LocalDateTime parseDateTime(String input) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(FORMAT);
         input = input.substring(0, input.length() - 2) + ":" + input.substring(input.length() - 2);
         return LocalDateTime.parse(input, formatter);
+    }
+    public static String parseDateTimeStr() {
+        String input = "Wed Feb 16 2022 22:00:00 GMT+0200";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(FORMAT);
+        input = input.substring(0, input.length() - 2) + ":" + input.substring(input.length() - 2);
+        return LocalDateTime.parse(input, formatter).toString();
     }
 
 }

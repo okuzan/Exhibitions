@@ -8,6 +8,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name="exhibitions")
@@ -26,6 +27,9 @@ public class Exhibition {
     private LocalDateTime endDate;
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime startDate;
+
+    @OneToMany(mappedBy="exhibition")
+    private List<Ticket> tickets;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

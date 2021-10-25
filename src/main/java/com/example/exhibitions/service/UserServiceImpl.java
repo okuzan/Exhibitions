@@ -1,19 +1,17 @@
 package com.example.exhibitions.service;
 
 import com.example.exhibitions.data.UserDTO;
-import com.example.exhibitions.entity.Hall;
-import com.example.exhibitions.entity.Role;
-import com.example.exhibitions.entity.User;
+import com.example.exhibitions.entity.*;
+import com.example.exhibitions.error.CustomErrorException;
 import com.example.exhibitions.paging.Paged;
 import com.example.exhibitions.paging.Paging;
-import com.example.exhibitions.repository.HallRepository;
-import com.example.exhibitions.repository.RoleRepository;
-import com.example.exhibitions.repository.UserRepository;
+import com.example.exhibitions.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +20,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+import javax.servlet.http.HttpServletResponse;
 import javax.swing.text.html.Option;
+import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -40,11 +42,41 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private HallRepository hallRepo;
 
+    @Autowired
+    private TicketRepository ticketRepo;
+
+    @Autowired
+    private ExhibitionRepository exhibitionRepo;
+
+    @Transactional
+    public void buyTicket(String username, Long showId) {
+        Exhibition show = exhibitionRepo.findById(showId).orElseThrow(
+                () -> new CustomErrorException(HttpStatus.valueOf(404), "Show is unavailable"));
+        User user = userRepository.findByEmail(username).orElseThrow(
+                () -> new CustomErrorException(HttpStatus.valueOf(404), "Couldn't detect acting user"));
+        Double price = show.getPrice();
+        BigDecimal balance = user.getBalance();
+        if (balance.compareTo(BigDecimal.valueOf(price)) < 0)
+            throw new CustomErrorException(HttpStatus.valueOf(500), "Not enough funds!");
+        Ticket ticket = createTicket(user, show, price);
+        ticketRepo.save(ticket);
+        user.charge(ticket.getPrice());
+        userRepository.save(user);
+    }
 
     public Paged<User> getPage(int pageNumber, int size) {
         PageRequest request = PageRequest.of(pageNumber - 1, size, Sort.by(Sort.Direction.ASC, "id"));
         Page<User> postPage = userRepository.findAll(request);
         return new Paged<>(postPage, Paging.of(postPage.getTotalPages(), pageNumber, size));
+    }
+
+    public Ticket createTicket(User user, Exhibition show, Double price) {
+        Ticket ticket = new Ticket();
+        ticket.setPrice(price);
+        ticket.setUser(user);
+        ticket.setExhibition(show);
+        ticket.setStamp(LocalDateTime.now());
+        return ticket;
     }
 
     public Page<User> findPaginated(Pageable pageable) {
@@ -82,7 +114,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return userRepository.findByEmail(email).get();
     }
 
     @Override
@@ -94,7 +126,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(s);
+        User user = userRepository.findByEmail(s).get();
         if (user == null) {
             throw new UsernameNotFoundException("Invalid username or password.");
         }

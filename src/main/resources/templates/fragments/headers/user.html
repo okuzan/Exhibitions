@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -21,17 +21,6 @@
                 </a>
 
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                    <div sec:authorize="hasRole('ROLE_ADMIN')">
-                        <li><a href="/api/users" class="nav-link px-2 link-dark" th:text="#{menu.users}"></a></li>
-<!--                        <li><a href="/api/shows/add" class="nav-link px-2 link-dark" th:text="#{menu.add}"></a></li>-->
-                    </div>
-                    <div sec:authorize="hasRole('ROLE_ADMIN')">
-<!--                        <li><a href="/api/users" class="nav-link px-2 link-dark" th:text="#{menu.users}"></a></li>-->
-                        <li><a href="/api/shows/add" class="nav-link px-2 link-dark" th:text="#{menu.add}"></a></li>
-                    </div>
-                    <div sec:authorize="hasRole('ROLE_USER')">
-                        <li><a href="/api/tickets" class="nav-link px-2 link-dark" th:text="#{menu.tickets}"></a></li>
-                    </div>
                     <li><a href="/api/shows" class="nav-link px-2 link-dark" th:text="#{menu.shows}"></a></li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -55,8 +44,7 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" onclick="logout_handler()" th:text="#{menu.profile.sign-out}"></a>
-                        </li>
+                        <li><a class="dropdown-item" onclick="logout_handler()" th:text="#{menu.profile.sign-out}"></a></li>
                     </ul>
                 </div>
             </div>
@@ -78,27 +66,7 @@
 
     <script type="text/javascript">
         function logout_handler() {
-            window.location.href = "/logout"
-        }
-
-        function URL_add_parameter2(url, param, value) {
-            var hash = {};
-            var parser = document.createElement('a');
-            parser.href = url;
-            var parameters = parser.search.split(/\?|&/);
-            for (var i = 0; i < parameters.length; i++) {
-                if (!parameters[i])
-                    continue;
-                var ary = parameters[i].split('=');
-                hash[ary[0]] = ary[1];
-            }
-            hash[param] = value;
-            var list = [];
-            Object.keys(hash).forEach(function (key) {
-                list.push(key + '=' + hash[key]);
-            });
-            parser.search = '?search=' + list.join(',');
-            return parser.href;
+            window.location.href= "/logout"
         }
 
         function URL_add_parameter(url, param, value) {

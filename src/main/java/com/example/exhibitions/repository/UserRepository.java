@@ -7,11 +7,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    User findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
     User getUserByUsername(String username);
 
@@ -19,4 +21,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional
     @Query("update User u set u.enabled = ?1 where u.id = ?2")
     void changeEnabledStatus(Boolean bool, Long id);
+
+    @Modifying
+    @Transactional
+    @Query("update User u set u.balance = u.balance + ?1 where u.email = ?2")
+    void replenishAccount(BigDecimal decimal, String id);
 }

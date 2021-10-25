@@ -1,47 +1,155 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:22="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <th:block th:include="fragments/js/head.html :: bootstrap">...</th:block>
     <th:block th:include="fragments/js/main.html :: script">...</th:block>
     <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
-    <title th:text="#{menu.users}"></title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/shows.css}"/>
+    <script type="text/javascript" th:src="@{/js/show.js}"></script>
+    <script type='text/javascript'
+            src='https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js'></script>
+    <link href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='https://use.fontawesome.com/releases/v5.7.2/css/all.css' rel='stylesheet'>
+    <!--    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+    <title th:text="#{menu.shows}"></title>
 </head>
 <body>
 <div th:include="fragments/headers/general :: header">...</div>
+<div id="filterbar" class="collapse">
+    <div class="box border-bottom">
+        <div class="form-group text-center">
+            <div class="btn-group" data-toggle="buttons">
+                <!--                <label class="btn btn-success form-check-label"> <input-->
+                <!--                        class="form-check-input" type="radio"> Reset-->
+                <!--                </label>-->
+                <button onclick="refresh()" class="btn btn-dark" th:text="#{apply}"></button>
+                <!--                <label class="btn btn-success form-check-label active">-->
+                <!--                    <input class="form-check-input" type="radio" onclick="refresh()" checked> Apply-->
+                <!--                </label>-->
+            </div>
+        </div>
+    </div>
+
+    <div class="box border-bottom">
+        <div class="box-label text-uppercase d-flex align-items-center">
+            <th:block th:text="#{show.price}"></th:block>
+            <button class="btn ml-auto" type="button" data-toggle="collapse" data-target="#price"
+                    aria-expanded="false" aria-controls="price"><span class="fas fa-plus"></span></button>
+        </div>
+        <div class="collapse" id="price">
+            <div class="middle">
+                <div class="multi-range-slider">
+                    <input type="range" id="input-left" min="0" max="100" value="10">
+                    <input type="range" id="input-right" min="0" max="100" value="50">
+                    <div class="slider">
+                        <div class="track"></div>
+                        <div class="range"></div>
+                        <div class="thumb left"></div>
+                        <div class="thumb right"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-2">
+                <div><span id="amount-left" class="font-weight-bold"></span> uah</div>
+                <div><span id="amount-right" class="font-weight-bold"></span> uah</div>
+            </div>
+        </div>
+
+    </div>
+    <div class="box border-bottom">
+        <div class="box-label text-uppercase d-flex align-items-center">
+            <th:block th:text="#{show.frame}"></th:block>
+            <button class="btn ml-auto" type="button" data-toggle="collapse" data-target="#datetime"
+                    aria-expanded="false" aria-controls="price"><span class="fas fa-plus"></span></button>
+        </div>
+
+        <div class="collapse" id="datetime">
+            <div class="middle">
+                <input id="datetimes"
+                       name="datetimes"
+                       class="form-control"/>
+                <input id="startdatetime"
+                       name="startdatetime"
+                       class="form-control" hidden>
+                <!--                       th:field="*{startDateTime}"-->
+                <input id="enddatetime"
+                       name="enddatetime"
+                       class="form-control" hidden>
+                <!--                       th:field="*{endDateTime}"-->
+            </div>
+        </div>
+    </div>
+    <div class="box">
+        <div class="box-label text-uppercase d-flex align-items-center">
+            <th:block th:text="#{show.title}"></th:block>
+            <button class="btn ml-auto" type="button" data-toggle="collapse" data-target="#namediv"
+                    aria-expanded="false" aria-controls="price"><span class="fas fa-plus"></span></button>
+        </div>
+        <div class="collapse" id="namediv">
+            <div class="middle">
+
+                <input type="text"
+                       id="name"
+                       name="name"
+                       class="form-control"
+                />
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="container">
-    <h1 th:text="#{menu.users}"></h1>
+    <h1 th:text="#{menu.shows}"></h1>
     <div class="row">
         <div class="col-lg-10 mt-5 mb-5">
+            <!--            <a th:text="${T(com.example.exhibitions.data.ExhibitionDTO).parseDateTimeStr()}"></a>-->
             <table id="posts" class="table table-bordered table-responsive-sm">
                 <thead>
                 <tr>
-                    <th th:text="#{users.id}"></th>
-                    <th th:text="#{users.name}"></th>
-                    <th th:text="#{users.username}"></th>
-                    <th th:text="#{users.email}"></th>
-                    <th th:text="#{users.enabled}"></th>
+                    <th th:text="#{show.title}"></th>
+                    <th th:text="#{show.start.date}"></th>
+                    <th th:text="#{show.end.date}"></th>
+                    <th th:text="#{show.price}"></th>
+                    <th th:text="#{show.halls}"></th>
+                    <div sec:authorize="hasRole('ROLE_USER')">
+                        <th th:text="#{buy}"></th>
+                    </div>
+                    <div sec:authorize="hasRole('ROLE_ADMIN')">
+                        <th th:text="#{edit}"></th>
+                    </div>
+
+
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="post : ${posts.page}">
-                    <!--/*@thymesVar id="post" type="com.example.exhibitions.entity.User"*/-->
-                    <td th:text="${post.id}"></td>
+                    <!--/*@thymesVar id="post" type="com.example.exhibitions.entity.Exhibition"*/-->
+                    <!--/*@thymesVar id="post" */-->
                     <td th:text="${post.name}"></td>
-                    <td th:text="${post.username}"></td>
-                    <td th:text="${post.email}"></td>
-                    <td>
-                        <label class="switch">
-                            <input class="toggle" id="toggle" type="checkbox" onchange="enable(this)"
-                                   th:checked="${post.enabled}" data-th-attr="data-id=${post.id}">
-                            <span class="slider round"></span>
-                        </label>
+                    <!--                    <td th:text="${#temporals.format(post.startDate, 'dd-MM-yyyy HH:mm')}"></td>-->
+                    <td th:text="${#temporals.format(post.startDate, 'dd-MM-yyyy HH:mm')}"></td>
+                    <td th:text="${#temporals.format(post.endDate, 'dd-MM-yyyy HH:mm')}"></td>
+                    <td th:text="${post.price}"></td>
+                    <td th:text="${#strings.listJoin(post.halls.![number], ', ')}"></td>
+                    <td sec:authorize="hasRole('ROLE_USER')">
+                        <button onclick="buy(this)" data-th-attr="data-id=${post.id}" class="btn btn-dark"
+                                th:text="#{buy}"></button>
+                    </td>
+                    <td sec:authorize="hasRole('ROLE_ADMIN')">
+                        <button onclick="edit(this)" data-th-attr="data-id=${post.id}" class="btn btn-dark"
+                                th:text="#{edit}"></button>
                     </td>
                 </tr>
                 </tbody>
-            </table>
 
+            </table>
             <nav aria-label="Page navigation" class="paging">
                 <ul class="pagination" th:if="${posts.page.totalPages > 1}">
                     <li class="page-item" th:classappend="${!posts.paging.isPrevEnabled()? 'disabled' : ''}">
@@ -69,29 +177,112 @@
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-    function enable(checkboxElem) {
-        const id = checkboxElem.getAttribute("data-id");
-
+<script th:inline="javascript">
+    function filterData() {
         $.ajax({
             type: "POST",
-            url: "/api/users/enabled/" + id,
-            data: {checked: checkboxElem.checked},
-            error: function () {
+            url: "/api/shows/filtered",
+            error: function (e) {
+
                 alert('Something went south!');
+            },
+            // success: function (e) {
+            //     alert('good!');
+            // }
+        }).done(
+            function (response) {
+                alert(response)
+                window.location.href = "/api/shows"
+            }
+        );
+
+    }
+</script>
+<script>
+    $(function () {
+        $('input[name="datetimes"]').daterangepicker({
+            timePicker: true,
+            startDate: moment().startOf('hour'),
+            endDate: moment().startOf('hour').add(32, 'hour'),
+            locale: {
+                format: 'DD.MM hh:mm'
+            }
+        }, function (start, end, label) {
+            document.getElementById("startdatetime").value = start.toLocaleString();
+            document.getElementById("enddatetime").value = end.toLocaleString();
+        })
+    })
+</script>
+
+<script type="text/javascript">
+    function buy(btn) {
+        const id = btn.getAttribute("data-id");
+        $.ajax({
+            type: "POST",
+            url: "/api/shows/buy/",
+            data: {id: id},
+            error: function (xhr, status, error) {
+                // alert('Something went south!');
+                // alert(xhr.responseText);
+                var err = JSON.parse(xhr.responseText);
+                alert(err.message);
+                // alert(error);
             }
         }).done(
             function (response) {
                 alert(response)
             }
         );
+    }
 
-        if (checkboxElem.checked) {
-            alert("enabled");
-        } else {
-            alert("disabled");
-        }
+    function edit(btn) {
+        const id = btn.getAttribute("data-id");
+        window.location.href = '/api/shows/' + id + '/edit'
+    }
+
+    function refresh() {
+        let priceMin = (document.getElementById("input-left").value);
+        let priceMax = (document.getElementById("input-right").value);
+        let dateStart = (document.getElementById("startdatetime").value);
+        let dateEnd = (document.getElementById("enddatetime").value);
+        let title = (document.getElementById("name").value);
+        // console.log(dateEnd);
+        // console.log(dateStart);
+        // let enc = btoa("Thu Nov 25 2021 00:00:00 GMT+0200")
+        // let value = "endDate<"+ btoa(dateEnd) + ",";
+        // let value = "endDate<Thu_Nov_25_2021_00*00*00_GMT+0200";
+        // let value = "endDate<243200";
+
+        let value = ""
+        if (title !== "") value += "name:" + title + ",";
+        if (priceMin !== "") value += "price>" + priceMin + ",";
+        if (priceMax !== "") value += "price<" + priceMax + ",";
+        // if(dateEnd!=="") value+="endDate<"+ dateEnd.replace(":", "*") + ",";
+        // if(dateStart!=="") value+="startDate>"+ dateStart.replace(":", "*") + ",";
+        // if(dateEnd!=="")
+        // value+="endDate<2014-05-27T00:00,";
+        let url = window.location.href;
+
+        url = URL_add_parameter(url, "search", value.substring(0, value.length - 1))
+        if (dateEnd !== "") url = URL_add_parameter(url, "end", btoa(dateEnd))
+        if (dateStart !== "") url = URL_add_parameter(url, "start", btoa(dateStart))
+
+        window.location.href = url
+        // alert(url)
+        // $.ajax({
+        //     type: "GET",
+        //     url: url,
+        //     data: {search: "endDate<Thu_Nov_25_2021_00*00*00_GMT+0200"},
+        //     error: function () {
+        //         alert('Something went south!');
+        //     }
+        // })
+        //     .done(
+        //     function (response) {
+        //         alert(response)
+        //     }
+        // );
+
     }
 </script>
 </body>

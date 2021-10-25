@@ -1,24 +1,19 @@
 package com.example.exhibitions.error;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.servlet.NoHandlerFoundException;
-
-import java.awt.*;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 @ControllerAdvice
 class CustomControllerAdvice {
 
-//    @ResponseStatus(HttpStatus.FORBIDDEN)
+    //    @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(CustomErrorException.class)
-    public String handle404(CustomErrorException e) {
-        System.out.println(e.getMessage());
-        return "error/404";
+    public ResponseEntity<?> handle404(CustomErrorException e) {
+//        return "error/404";
+//        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage()), status);
+        return new ResponseEntity<>(new ErrorResponse(e.getStatus(), e.getMessage(), "", e.getData()), e.getStatus());
+
     }
 //    @ExceptionHandler(NullPointerException.class) // exception handled
 //    public ResponseEntity<ErrorResponse> handleNullPointerExceptions(Exception e) {

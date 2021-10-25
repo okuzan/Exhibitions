@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <th:block th:include="fragments/js/head.html :: bootstrap">...</th:block>
+    <th:block th:include="fragments/js/main.html :: script">...</th:block>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/shows.css}"/>
+    <script type="text/javascript" th:src="@{/js/show.js}"></script>
+    <script type='text/javascript'
+            src='https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js'></script>
+    <link href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='https://use.fontawesome.com/releases/v5.7.2/css/all.css' rel='stylesheet'>
+    <!--    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+    <title th:text="#{menu.shows}"></title>
+</head>
+<body>
+<div th:include="fragments/headers/general :: header">...</div>
+
+<div class="container">
+    <h1 th:text="#{menu.shows}"></h1>
+    <div class="row">
+        <div class="col-lg-10 mt-5 mb-5">
+            <table id="posts" class="table table-bordered table-responsive-sm">
+                <thead>
+                <tr>
+                    <th th:text="#{show.title}"></th>
+                    <th th:text="#{show.start.date}"></th>
+                    <th th:text="#{show.end.date}"></th>
+                    <th th:text="#{show.halls}"></th>
+                    <th th:text="#{show.price}"></th>
+                    <th th:text="#{ticket.stamp}"></th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="ticket : ${tickets}">
+                    <!--/*@thymesVar id="ticket" type="com.example.exhibitions.entity.Ticket"*/-->
+                    <td th:text="${ticket.exhibition.name}"></td>
+                    <td th:text="${#temporals.format(ticket.exhibition.startDate, 'dd-MM-yyyy HH:mm')}"></td>
+                    <td th:text="${#temporals.format(ticket.exhibition.endDate, 'dd-MM-yyyy HH:mm')}"></td>
+                    <td th:text="${#strings.listJoin(ticket.exhibition.halls.![number], ', ')}"></td>
+                    <td th:text="${ticket.price}"></td>
+                    <td th:text="${#temporals.format(ticket.stamp, 'dd-MM-yyyy HH:mm')}"></td>
+                </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
