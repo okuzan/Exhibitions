@@ -24,7 +24,7 @@
 <div th:include="fragments/headers/general :: header">...</div>
 
 <div class="container">
-    <h1 th:text="#{menu.shows}"></h1>
+    <h1 th:text="#{menu.tickets}"></h1>
     <div class="row">
         <div class="col-lg-10 mt-5 mb-5">
             <table id="posts" class="table table-bordered table-responsive-sm">
@@ -39,19 +39,27 @@
 
                 </tr>
                 </thead>
+
                 <tbody>
                 <tr th:each="ticket : ${tickets}">
                     <!--/*@thymesVar id="ticket" type="com.example.exhibitions.entity.Ticket"*/-->
                     <td th:text="${ticket.exhibition.name}"></td>
-                    <td th:text="${#temporals.format(ticket.exhibition.startDate, 'dd-MM-yyyy HH:mm')}"></td>
-                    <td th:text="${#temporals.format(ticket.exhibition.endDate, 'dd-MM-yyyy HH:mm')}"></td>
+                    <!--                    @environment.getProperty('date.format')-->
+                    <!--                    <td th:text="${#temporals.format(ticket.exhibition.startDate, 'dd-MM-yyyy HH:mm')}"></td>-->
+                    <!--                    <td th:text="${#temporals.format(ticket.exhibition.startDate, __${''''+@environment.getProperty('ff')+''''}__)}"></td>-->
+                    <!--                    <td th:text="${#temporals.format(ticket.exhibition.startDate, __${@environment.getProperty('date.format')}__)}">-->
+                    <td th:text="${#temporals.format(ticket.exhibition.startDate, #messages.msg('date.format'))}"></td>
+                    <td th:text="${#temporals.format(ticket.exhibition.endDate, #messages.msg('date.format'))}"></td>
+<!--                    <td th:text="${#temporals.format(ticket.exhibition.endDate, 'dd-MM-yyyy HH:mm')}"></td>-->
                     <td th:text="${#strings.listJoin(ticket.exhibition.halls.![number], ', ')}"></td>
                     <td th:text="${ticket.price}"></td>
                     <td th:text="${#temporals.format(ticket.stamp, 'dd-MM-yyyy HH:mm')}"></td>
+                    <!--                    <p th:text="${#temporals.format(ticket.exhibition.endDate, __${''''+@environment.getProperty('date.format')+''''}__)}">-->
                 </tr>
                 </tbody>
 
             </table>
+
         </div>
     </div>
 </div>

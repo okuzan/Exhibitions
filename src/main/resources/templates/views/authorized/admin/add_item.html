@@ -19,7 +19,7 @@
                 <div class="alert alert-info" th:text="#{add.success}"></div>
             </div>
             <div th:if="${param.error}">
-                <div class="alert alert-danger" th:text="#{show.fail}"></div>
+                <div class="alert alert-danger" th:text="#{input.fail}"></div>
             </div>
 
             <!--/*@thymesVar id="error" type="java.lang.Error"*/-->
@@ -103,6 +103,7 @@
                        th:text="${error}">Validation error</p>
 
                 </div>
+                </br>
                 <div class="form-group">
                     <button type="submit" class="btn btn-success" th:text="#{show.add}">
                     </button>
@@ -119,14 +120,16 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
-<script>
+<script th:inline="javascript">
     $(function () {
+        let format = /*[[#{date.locale}]]*/ "";
+
         $('input[name="datetimes"]').daterangepicker({
             timePicker: true,
             startDate: moment().startOf('hour'),
             endDate: moment().startOf('hour').add(32, 'hour'),
             locale: {
-                format: 'DD.MM hh:mm'
+                format: format
             }
         }, function (start, end, label) {
             document.getElementById("startdatetime").value = start.toLocaleString();

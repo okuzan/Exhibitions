@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <th:block th:include="fragments/js/head.html :: bootstrap">...</th:block>
     <th:block th:include="fragments/js/main.html :: script">...</th:block>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
+    <!--    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>-->
     <link rel="stylesheet" type="text/css" th:href="@{/css/shows.css}"/>
     <script type="text/javascript" th:src="@{/js/show.js}"></script>
     <script type='text/javascript'
@@ -17,8 +17,12 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-
-    <title th:text="#{menu.shows}"></title>
+    <style> h1 {
+        text-align: left;
+        /*margin-left: 40px;*/
+    }
+    </style>
+    <title th:text="       #{menu.shows}"></title>
 </head>
 <body>
 <div th:include="fragments/headers/general :: header">...</div>
@@ -29,6 +33,7 @@
                 <!--                <label class="btn btn-success form-check-label"> <input-->
                 <!--                        class="form-check-input" type="radio"> Reset-->
                 <!--                </label>-->
+                <button onclick="reset()" class="btn btn-dark" th:text="#{reset}"></button>
                 <button onclick="refresh()" class="btn btn-dark" th:text="#{apply}"></button>
                 <!--                <label class="btn btn-success form-check-label active">-->
                 <!--                    <input class="form-check-input" type="radio" onclick="refresh()" checked> Apply-->
@@ -46,8 +51,8 @@
         <div class="collapse" id="price">
             <div class="middle">
                 <div class="multi-range-slider">
-                    <input type="range" id="input-left" min="0" max="100" value="10">
-                    <input type="range" id="input-right" min="0" max="100" value="50">
+                    <input type="range" id="input-left" min="0" th:max="${maxPrice}" th:value="${minPrice}">
+                    <input type="range" id="input-right" min="0" th:max="${maxPrice}" th:value="${maxPrice}">
                     <div class="slider">
                         <div class="track"></div>
                         <div class="range"></div>
@@ -57,8 +62,8 @@
                 </div>
             </div>
             <div class="d-flex align-items-center justify-content-between mt-2">
-                <div><span id="amount-left" class="font-weight-bold"></span> uah</div>
-                <div><span id="amount-right" class="font-weight-bold"></span> uah</div>
+                <div><span id="amount-left" class="font-weight-bold" th:value="#{currency}"></span> uah</div>
+                <div><span id="amount-right" class="font-weight-bold" th:value="#{currency}"></span> uah</div>
             </div>
         </div>
 
@@ -106,10 +111,10 @@
 </div>
 
 <div class="container">
-    <h1 th:text="#{menu.shows}"></h1>
     <div class="row">
         <div class="col-lg-10 mt-5 mb-5">
             <!--            <a th:text="${T(com.example.exhibitions.data.ExhibitionDTO).parseDateTimeStr()}"></a>-->
+            <h1 th:text="#{menu.shows}"></h1>
             <table id="posts" class="table table-bordered table-responsive-sm">
                 <thead>
                 <tr>
@@ -134,8 +139,9 @@
                     <!--/*@thymesVar id="post" */-->
                     <td th:text="${post.name}"></td>
                     <!--                    <td th:text="${#temporals.format(post.startDate, 'dd-MM-yyyy HH:mm')}"></td>-->
-                    <td th:text="${#temporals.format(post.startDate, 'dd-MM-yyyy HH:mm')}"></td>
-                    <td th:text="${#temporals.format(post.endDate, 'dd-MM-yyyy HH:mm')}"></td>
+                    <td th:text="${#temporals.format(post.startDate, #messages.msg('date.format'))}"></td>
+                    <td th:text="${#temporals.format(post.endDate, #messages.msg('date.format'))}"></td>
+                    <!--                    <td th:text="${#temporals.format(post.endDate, 'dd-MM-yyyy HH:mm')}"></td>-->
                     <td th:text="${post.price}"></td>
                     <td th:text="${#strings.listJoin(post.halls.![number], ', ')}"></td>
                     <td sec:authorize="hasRole('ROLE_USER')">
@@ -153,13 +159,13 @@
             <nav aria-label="Page navigation" class="paging">
                 <ul class="pagination" th:if="${posts.page.totalPages > 1}">
                     <li class="page-item" th:classappend="${!posts.paging.isPrevEnabled()? 'disabled' : ''}">
-                        <a class="page-link" th:href="@{${path}+'/?pageNumber=' + ${posts.paging.pageNumber - 1}}"
+                        <a class="page-link" th:href="@{${path}+'?pageNumber=' + ${posts.paging.pageNumber - 1}}"
                            tabindex="-1" th:text="#{pagination.prev}"></a>
                     </li>
                     <th:block th:each="item : ${posts.paging.getItems()}">
                         <li class="page-item" th:classappend="${item.index == posts.paging.pageNumber? 'active' : ''}"
                             th:if="${item.pageItemType.name() == 'PAGE'}">
-                            <a class="page-link" th:href="@{${path}+'/?pageNumber=' + ${item.index}}"
+                            <a class="page-link" th:href="@{${path}+'?pageNumber=' + ${item.index}}"
                                th:text="${item.index}"></a>
                         </li>
                         <li class="page-item disabled" th:if="${item.pageItemType.name() == 'DOTS'}">
@@ -168,7 +174,7 @@
                     </th:block>
                     <li class="page-item" th:classappend="${!posts.paging.isNextEnabled()? 'disabled' : ''}">
                         <a class="page-link"
-                           th:href="@{${path}+'/?pageNumber=' + ${posts.paging.pageNumber + 1}}"
+                           th:href="@{${path}+'?pageNumber=' + ${posts.paging.pageNumber + 1}}"
                            th:text="#{pagination.next}"></a>
                     </li>
                 </ul>
@@ -198,14 +204,16 @@
 
     }
 </script>
-<script>
+<script th:inline="javascript">
     $(function () {
+        let format = /*[[#{date.locale}]]*/ "";
+
         $('input[name="datetimes"]').daterangepicker({
             timePicker: true,
             startDate: moment().startOf('hour'),
             endDate: moment().startOf('hour').add(32, 'hour'),
             locale: {
-                format: 'DD.MM hh:mm'
+                format: format
             }
         }, function (start, end, label) {
             document.getElementById("startdatetime").value = start.toLocaleString();
@@ -214,7 +222,7 @@
     })
 </script>
 
-<script type="text/javascript">
+<script type="text/javascript" th:inline="javascript">
     function buy(btn) {
         const id = btn.getAttribute("data-id");
         $.ajax({
@@ -240,14 +248,47 @@
         window.location.href = '/api/shows/' + id + '/edit'
     }
 
+    function reset() {
+        let max = /*[[${maxPrice}]]*/ "";
+        let min = /*[[${minPrice}]]*/ "";
+        let format = /*[[#{date.format}]]*/ "";
+
+        document.getElementById("input-left").value = min
+        document.getElementById("input-right").value = max;
+        // document.getElementById("input-right").value = max;
+        document.getElementById("name").value = "";
+        console.log(document.getElementById("startdatetime").value)
+        document.getElementById("startdatetime").value = "";
+        // document.getElementById("datetimes").value = moment();
+        $('input[name="datetimes"]').daterangepicker({
+            timePicker: true,
+            startDate: moment().startOf('hour'),
+            endDate: moment().startOf('hour').add(32, 'hour'),
+            locale: {
+                format: format
+            }
+
+        })
+        console.log(document.getElementById("startdatetime").value)
+
+        console.log(document.getElementById("enddatetime").value)
+        document.getElementById("enddatetime").value = "";
+        console.log(document.getElementById("enddatetime").value)
+
+    }
+
     function refresh() {
         let priceMin = (document.getElementById("input-left").value);
         let priceMax = (document.getElementById("input-right").value);
         let dateStart = (document.getElementById("startdatetime").value);
         let dateEnd = (document.getElementById("enddatetime").value);
         let title = (document.getElementById("name").value);
-        // console.log(dateEnd);
-        // console.log(dateStart);
+        console.log(dateEnd);
+        console.log(dateStart);
+        console.log(priceMin);
+        console.log(priceMax);
+        console.log(title);
+        alert(dateStart + "\n" + dateEnd + "\n" + priceMin + "\n" + priceMax + "\n" + title)
         // let enc = btoa("Thu Nov 25 2021 00:00:00 GMT+0200")
         // let value = "endDate<"+ btoa(dateEnd) + ",";
         // let value = "endDate<Thu_Nov_25_2021_00*00*00_GMT+0200";
@@ -264,8 +305,10 @@
         let url = window.location.href;
 
         url = URL_add_parameter(url, "search", value.substring(0, value.length - 1))
-        if (dateEnd !== "") url = URL_add_parameter(url, "end", btoa(dateEnd))
-        if (dateStart !== "") url = URL_add_parameter(url, "start", btoa(dateStart))
+        // if (dateEnd !== "") url = URL_add_parameter(url, "end", btoa(dateEnd))
+        // if (dateStart !== "") url = URL_add_parameter(url, "start", btoa(dateStart))
+        url = URL_add_parameter(url, "start", btoa(dateStart))
+        url = URL_add_parameter(url, "end", btoa(dateEnd))
 
         window.location.href = url
         // alert(url)

@@ -9,7 +9,8 @@
 <div class="jumbotron text-center">
     <div th:include="fragments/js/head :: bootstrap">...</div>
     <div th:include="fragments/headers/general :: header">...</div>
-    <h1>Welcome</h1>
+    <h1>Welcome </h1>
+    <div th:text="${#authentication.name}"></div>
     <hr>
 </div>
 </body>

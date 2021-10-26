@@ -15,6 +15,7 @@ import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,8 +44,8 @@ public class ExhibitionServiceImpl {
     }
 
     public Paged<Exhibition> getPageFiltered(int pageNumber, int size, String startStr, String endStr) {
-        LocalDateTime start = ExhibitionDTO.parseDateTime(new String(Base64.decodeBase64(startStr)));
-        LocalDateTime end = ExhibitionDTO.parseDateTime(new String(Base64.decodeBase64(endStr)));
+        LocalDateTime start = ExhibitionDTO.parseDateTime(new String(Base64.decodeBase64(startStr.getBytes(StandardCharsets.UTF_8))));
+        LocalDateTime end = ExhibitionDTO.parseDateTime(new String(Base64.decodeBase64(endStr.getBytes(StandardCharsets.UTF_8))));
 
         PageRequest request = PageRequest.of(pageNumber - 1, size, Sort.by(Sort.Direction.ASC, "id"));
         Page<Exhibition> postPage = exhibitionRepo.getAllByStartDateAfterAndEndDateBefore(start, end, request);

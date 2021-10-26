@@ -119,16 +119,17 @@
                            th:text="${error}">Validation error</p>
 
                     </div>
+                    </br>
                     <div class="form-group">
                         <button type="submit" class="btn btn-success" th:text="#{edit}">
+                        </button>
+                        <button  onclick="deleteItem()" class="btn btn-danger" th:text="#{delete}">
                         </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <button  onclick="deleteItem()" class="btn btn-danger" th:text="#{delete}">
-    </button>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
@@ -148,29 +149,27 @@
             error: function (e) {
                 alert('Something went south!');
             },
-            // success: function (e) {
-            //     alert('good!');
-            // }
         }).done(
             function (response) {
                 alert(response)
                 window.location.href = "/api/shows"
             }
         );
-
     }
 
     $(function () {
         let startDate = /*[[${data.startDate}]]*/ "";
         let endDate = /*[[${data.endDate}]]*/ "";
-        let format = /*[[#{date.format}]]*/ "";
+        let format = /*[[#{date.locale}]]*/ "";
         document.getElementById("startDateTime").value = moment(Date.parse(startDate)).toLocaleString();
         document.getElementById("endDateTime").value = moment(Date.parse(endDate)).toLocaleString();
+        // $('input[name="datetimes"]').setDefaults($('input[name="datetimes"]').regional['us']);
 
         $('input[name="datetimes"]').daterangepicker({
             timePicker: true,
             startDate: moment(Date.parse(startDate)),
             endDate: moment(Date.parse(endDate)),
+            // format: 'YYYY-MM-DD'
             locale: {
                 format: format
             }

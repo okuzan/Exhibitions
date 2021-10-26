@@ -13,13 +13,13 @@ import com.example.exhibitions.repository.TicketRepository;
 import com.example.exhibitions.repository.UserRepository;
 import com.example.exhibitions.service.ExhibitionServiceImpl;
 import com.example.exhibitions.service.UserServiceImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -50,6 +50,7 @@ public class MainController {
 
     @Autowired
     private ExhibitionRepository exhibitionRepository;
+
 
     @ModelAttribute("exhibition")
     public ExhibitionDTO exhibitionDTO() {
@@ -157,14 +158,20 @@ public class MainController {
         return ResponseEntity.ok("Bought!");
     }
 
+    private static final Logger logger = LogManager.getLogger(MainController.class);
+
     @GetMapping("/api/shows")
     public String seeShows(
             @RequestParam(value = "search", required = false) String search,
             @RequestParam(value = "start", required = false) String startHash,
             @RequestParam(value = "end", required = false) String endHash,
             @RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
-            @RequestParam(value = "size", required = false, defaultValue = "10") int size, Model model) {
+            @RequestParam(value = "size", required = false, defaultValue = "5") int size, Model model) {
         ExhibitionSpecificationsBuilder builder = new ExhibitionSpecificationsBuilder();
+        logger.info(exhibitionRepository.getMaxPrice());
+        logger.info(exhibitionRepository.getMinPrice());
+        model.addAttribute("minPrice", exhibitionRepository.getMinPrice());
+        model.addAttribute("maxPrice", exhibitionRepository.getMaxPrice());
         Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
         Matcher matcher = pattern.matcher(search + ",");
         while (matcher.find()) {

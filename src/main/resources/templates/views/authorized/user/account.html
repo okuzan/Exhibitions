@@ -75,6 +75,7 @@
 <!--                    </button>-->
 <!--                </div>-->
             </form>
+            </br>
             <form th:action="@{/account}" method="post">
                 <input type="text"
                        id="balance"
@@ -82,6 +83,7 @@
                        th:value="${balance}"
                        class="form-control"
                 />
+                </br>
                 <div class="form-group">
                     <button type="submit" class="btn btn-success" th:text="#{account.button.replenish}">
                     </button>

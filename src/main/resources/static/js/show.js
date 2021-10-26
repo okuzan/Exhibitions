@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         thumbLeft.style.left = percent + "%";
         range.style.left = percent + "%";
-        amountLeft.innerText = parseInt(percent * 100);
+        amountLeft.innerText = parseInt(percent);
     }
 
     setLeftValue();
@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         var percent = ((_this.value - min) / (max - min)) * 100;
 
-        amountRight.innerText = parseInt(percent * 100);
+        amountRight.innerText = parseInt(percent);
         thumbRight.style.right = (100 - percent) + "%";
         range.style.right = (100 - percent) + "%";
     }
