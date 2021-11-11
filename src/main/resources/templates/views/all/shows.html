@@ -12,10 +12,9 @@
             src='https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js'></script>
     <link href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' rel='stylesheet'>
     <link href='https://use.fontawesome.com/releases/v5.7.2/css/all.css' rel='stylesheet'>
-    <!--    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>-->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <style> h1 {
         text-align: left;
@@ -30,14 +29,8 @@
     <div class="box border-bottom">
         <div class="form-group text-center">
             <div class="btn-group" data-toggle="buttons">
-                <!--                <label class="btn btn-success form-check-label"> <input-->
-                <!--                        class="form-check-input" type="radio"> Reset-->
-                <!--                </label>-->
                 <button onclick="reset()" class="btn btn-dark" th:text="#{reset}"></button>
                 <button onclick="refresh()" class="btn btn-dark" th:text="#{apply}"></button>
-                <!--                <label class="btn btn-success form-check-label active">-->
-                <!--                    <input class="form-check-input" type="radio" onclick="refresh()" checked> Apply-->
-                <!--                </label>-->
             </div>
         </div>
     </div>
@@ -251,7 +244,7 @@
     function reset() {
         let max = /*[[${maxPrice}]]*/ "";
         let min = /*[[${minPrice}]]*/ "";
-        let format = /*[[#{date.format}]]*/ "";
+        let format = /*[[#{date.locale}]]*/ "";
 
         document.getElementById("input-left").value = min
         document.getElementById("input-right").value = max;
@@ -288,7 +281,7 @@
         console.log(priceMin);
         console.log(priceMax);
         console.log(title);
-        alert(dateStart + "\n" + dateEnd + "\n" + priceMin + "\n" + priceMax + "\n" + title)
+        // alert(dateStart + "\n" + dateEnd + "\n" + priceMin + "\n" + priceMax + "\n" + title)
         // let enc = btoa("Thu Nov 25 2021 00:00:00 GMT+0200")
         // let value = "endDate<"+ btoa(dateEnd) + ",";
         // let value = "endDate<Thu_Nov_25_2021_00*00*00_GMT+0200";

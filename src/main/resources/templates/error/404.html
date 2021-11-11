@@ -5,10 +5,20 @@
     <title>Insert title here</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" >
+    <th:block th:include="fragments/js/head.html :: bootstrap"></th:block>
+    <th:block th:include="fragments/js/main.html :: script"></th:block>
+
+    <style>
+        h1 {text-align: center;}
+        p {text-align: center;}
+        div {text-align: center;}
+    </style>
+
 </head>
 <body>
+<div th:include="fragments/headers/general :: header"></div>
 <div class="container">
-    <h4>SOME RESOURCE NOT FOUND! PLEASE CONTACT MAINTENANCE TEAM</h4>
+    <h4>404 NOT FOUND! PLEASE CONTACT MAINTENANCE TEAM</h4>
     <table class="table table-bordered">
         <tr>
             <td>DATE</td>

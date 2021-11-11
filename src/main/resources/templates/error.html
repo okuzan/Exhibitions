@@ -3,8 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <th:block th:include="fragments/js/head.html :: bootstrap"></th:block>
+    <th:block th:include="fragments/js/main.html :: script"></th:block>
+
 </head>
 <body>
+<div th:include="fragments/headers/general :: header"></div>
 <h1> general error</h1>
+<div class="container">
+    <h4>INTERNAL SERVER ERROR</h4>
+    <table class="table table-bordered">
+        <tr>
+            <td>DATE</td>
+            <td th:text="${timestamp}"></td>
+        </tr>
+
+        <tr>
+            <td>STATUS</td>
+            <td th:text="${status}"></td>
+        </tr>
+
+        <tr>
+            <td>ERROR</td>
+            <td th:text="${error}"></td>
+        </tr>
+
+        <tr>
+            <td>PATH</td>
+            <td th:text="${path}"></td>
+        </tr>
+
+    </table>
+</div>
+
 </body>
 </html>

@@ -67,11 +67,6 @@ public class MainController {
         return "views/unauthorized/login";
     }
 
-    @GetMapping("/snippet")
-    public String login3() {
-        return "views/authorized/user/snippet";
-    }
-
     @GetMapping(value = {"/", "/welcome"})
     public String homepage() {
         return "views/authorized/welcome";
@@ -84,15 +79,6 @@ public class MainController {
         return "views/authorized/user/account";
     }
 
-    @PostMapping("/api/shows/add")
-    public String addExhibition(@ModelAttribute("exhibition")
-                                @Validated ExhibitionDTO data,
-                                BindingResult result) {
-        if (result.hasErrors()) return "redirect:/api/shows/add?error";
-
-        exhibitionService.save(data);
-        return "redirect:/api/shows/add?success";
-    }
 
     @PostMapping("/account")
     public String replenishAccount(@ModelAttribute("balance") BigDecimal balance,
@@ -112,43 +98,12 @@ public class MainController {
         return "redirect:/api/shows/{id}/edit?success";
     }
 
-    @GetMapping("/api/shows/add")
-    public String addShow(Model model) {
-        return "views/authorized/admin/add_item";
-    }
-
-
-    @GetMapping("/api/shows/{id}")
-    public String show(Model model, @PathVariable String id) {
-        return "views/all/show";
-    }
 
     @GetMapping("/api/shows/{id}/buy")
     public String buy(Model model, @PathVariable String id) {
         return "views/authorized/user/buy";
     }
 
-    @GetMapping("/api/shows/{id}/edit")
-    public String edit(Model model, @PathVariable String id) {
-        Exhibition exhibition = exhibitionRepository.findById(Long.valueOf(id))
-                .orElseThrow(() -> new CustomErrorException(HttpStatus.NOT_FOUND, "Couldn't find that item!"));
-        model.addAttribute("data", exhibition);
-        return "/views/authorized/admin/edit_item";
-    }
-
-    @ResponseBody
-    @PostMapping("/api/users/enabled/{id}")
-    public String changeUserStatus(@RequestParam Boolean checked, @PathVariable String id) {
-        userRepository.changeEnabledStatus(checked, Long.valueOf(id));
-        return "Success";
-    }
-
-    @ResponseBody
-    @DeleteMapping("/api/shows/delete/{id}")
-    public ResponseEntity<?> deleteShow(@PathVariable String id) {
-        exhibitionRepository.deleteById(Long.valueOf(id));
-        return ResponseEntity.ok("Deleted");
-    }
 
     @ResponseBody
     @PostMapping("/api/shows/buy")
@@ -160,7 +115,7 @@ public class MainController {
 
     private static final Logger logger = LogManager.getLogger(MainController.class);
 
-    @GetMapping("/api/shows")
+    @GetMapping(value = {"/api/shows", "/api/shows/"})
     public String seeShows(
             @RequestParam(value = "search", required = false) String search,
             @RequestParam(value = "start", required = false) String startHash,
@@ -174,15 +129,13 @@ public class MainController {
         model.addAttribute("maxPrice", exhibitionRepository.getMaxPrice());
         Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
         Matcher matcher = pattern.matcher(search + ",");
-        while (matcher.find()) {
+        while (matcher.find())
             builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
-        }
+
         Specification<Exhibition> spec = builder.build();
-        if (startHash != null && !startHash.isEmpty()) {
-            model.addAttribute("posts", exhibitionService.getPageFiltered(pageNumber, size, startHash, endHash));
-        } else {
-            model.addAttribute("posts", exhibitionService.getPage(pageNumber, size, spec));
-        }
+        model.addAttribute("posts", startHash != null && !startHash.isEmpty()
+                ? exhibitionService.getPageFiltered(pageNumber, size, startHash, endHash)
+                : exhibitionService.getPage(pageNumber, size, spec));
         model.addAttribute("path", "/api/shows");
         return "views/all/shows";
     }
@@ -194,14 +147,5 @@ public class MainController {
         return "views/authorized/user/tickets";
     }
 
-    @GetMapping(path = "/api/users")
-    public String posts(
-            @RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
-            @RequestParam(value = "size", required = false, defaultValue = "10") int size, Model model
-    ) {
-        model.addAttribute("posts", userService.getPage(pageNumber, size));
-        model.addAttribute("path", "/api/users");
-        return "views/authorized/admin/users";
-    }
 
 }

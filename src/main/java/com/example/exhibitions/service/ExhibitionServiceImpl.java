@@ -1,24 +1,23 @@
 package com.example.exhibitions.service;
 
 import com.example.exhibitions.data.ExhibitionDTO;
-import com.example.exhibitions.data.ExhibitionSpecification;
 import com.example.exhibitions.entity.Exhibition;
 import com.example.exhibitions.entity.Hall;
 import com.example.exhibitions.paging.Paged;
 import com.example.exhibitions.paging.Paging;
 import com.example.exhibitions.repository.ExhibitionRepository;
 import com.example.exhibitions.repository.HallRepository;
-import com.example.exhibitions.repository.TicketRepository;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service("exhibitionService")
@@ -43,6 +42,14 @@ public class ExhibitionServiceImpl {
         return new Paged<>(postPage, Paging.of(postPage.getTotalPages(), pageNumber, size));
     }
 
+    /**
+     * Retrieves list of shows filtered by time frame and further paginated based on page number and page size
+     * @param pageNumber - ordinal page number
+     * @param size - how many elements fit in one page
+     * @param startStr - base64 encoded string of lower bound filter time
+     * @param endStr- base64 encoded string of upper bound filter time
+     * @return paginated portion of exhibitions from the repository
+     */
     public Paged<Exhibition> getPageFiltered(int pageNumber, int size, String startStr, String endStr) {
         LocalDateTime start = ExhibitionDTO.parseDateTime(new String(Base64.decodeBase64(startStr.getBytes(StandardCharsets.UTF_8))));
         LocalDateTime end = ExhibitionDTO.parseDateTime(new String(Base64.decodeBase64(endStr.getBytes(StandardCharsets.UTF_8))));
@@ -52,27 +59,6 @@ public class ExhibitionServiceImpl {
         return new Paged<>(postPage, Paging.of(postPage.getTotalPages(), pageNumber, size));
     }
 
-//    public List<Exhibition> getBetweenDates(String startStr, String endStr){
-//        LocalDateTime start = ExhibitionDTO.parseDateTime(new String(Base64.decodeBase64(startStr)));
-//        LocalDateTime end = ExhibitionDTO.parseDateTime(new String(Base64.decodeBase64(endStr)));
-//        return exhibitionRepo.getAllByStartDateAfterAndEndDateBefore(start, end);
-//    }
-
-    public Page<Exhibition> findPaginated(Pageable pageable) {
-        int pageSize = pageable.getPageSize();
-        int currentPage = pageable.getPageNumber();
-        int startItem = currentPage * pageSize;
-        List<Exhibition> list;
-        List<Exhibition> shows = exhibitionRepo.findAll();
-        if (shows.size() < startItem) {
-            list = Collections.emptyList();
-        } else {
-            int toIndex = Math.min(startItem + pageSize, shows.size());
-            list = shows.subList(startItem, toIndex);
-        }
-
-        return new PageImpl<>(list, PageRequest.of(currentPage, pageSize), shows.size());
-    }
 
     public Exhibition mapDataToExhibition(final ExhibitionDTO data) {
         Exhibition exhibition = new Exhibition();
